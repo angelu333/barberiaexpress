@@ -809,7 +809,7 @@
                     <p>Configura tus horarios, recibe reservas y administra tu agenda semanal.</p>
                 </div>
                 <div class="card-footer">
-                    <button class="btn" id="btn-barber-login">Acceder como Peluquero</button>
+                    <button class="btn" id="btn-barber-login" onclick="showPage('barber-login')">Acceder como Peluquero</button>
                 </div>
             </div>
 
@@ -817,7 +817,7 @@
                 <div class="card-header">
                     <div class="card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
                     </div>
@@ -828,7 +828,7 @@
                     <p>Busca a tu peluquero por nombre o ID, y reserva en los horarios disponibles.</p>
                 </div>
                 <div class="card-footer">
-                    <button class="btn" id="btn-client-login">Acceder como Cliente</button>
+                    <button class="btn" id="btn-client-login" onclick="showPage('client-login')">Acceder como Cliente</button>
                 </div>
             </div>
         </div>
@@ -1618,14 +1618,28 @@
 
     // Función para mostrar/ocultar páginas
     function showPage(pageId) {
+        console.log("Mostrando página:", pageId);
         // Ocultar todas las páginas
         const pages = document.querySelectorAll('.page');
         pages.forEach(page => {
             page.style.display = 'none';
         });
         
-        // Mostrar la página seleccionada
-        document.getElementById(pageId).style.display = 'block';
+        // Mostrar la página principal si es necesario
+        if (pageId === 'home-page') {
+            document.getElementById('home-page').style.display = 'block';
+        } else {
+            // Ocultar la página principal
+            document.getElementById('home-page').style.display = 'none';
+            
+            // Mostrar la página seleccionada
+            const selectedPage = document.getElementById(pageId);
+            if (selectedPage) {
+                selectedPage.style.display = 'block';
+            } else {
+                console.error("Página no encontrada:", pageId);
+            }
+        }
         
         // Scroll al inicio
         window.scrollTo(0, 0);
@@ -2133,33 +2147,16 @@
     
     // Inicializar la aplicación
     document.addEventListener('DOMContentLoaded', function() {
+        console.log("DOM cargado completamente");
+        
         // Cargar datos del localStorage si existen
         const storedUsers = localStorage.getItem('users');
         if (storedUsers) {
             users = JSON.parse(storedUsers);
         }
         
-        // Event listeners para navegación principal
-        document.getElementById('btn-barber-login').addEventListener('click', function() {
-            showPage('barber-login');
-        });
-        
-        document.getElementById('btn-client-login').addEventListener('click', function() {
-            showPage('client-login');
-        });
-        
-        // Event listeners para navegación de peluquero
-        document.getElementById('barber-login-back').addEventListener('click', function(e) {
-            e.preventDefault();
-            showPage('home-page');
-        });
-        
-        document.getElementById('barber-register-link').addEventListener('click', function(e) {
-            e.preventDefault();
-            showPage('barber-register');
-        });
-        
-        document.getElementById('barber-register-back').addEventListener('click', function(e) {
-            e.preventDefault();
-            showPage('barber-login');
+        // Event listeners para navegación principal (respaldo por si onclick no funciona)
+        const barberLoginBtn = document.getElementById('btn-barber-login');
+        if (barberLoginBtn) {
+            bar
 
