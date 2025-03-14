@@ -839,6 +839,108 @@
                 grid-template-columns: 1fr;
             }
         }
+        
+        /* Asegurarse de que las páginas estén completamente ocultas */
+        .page {
+            display: none;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+        
+        .page.active {
+            display: block;
+            position: relative;
+        }
+        
+        /* Estilos para notificaciones */
+        .notification-badge {
+            position: relative;
+            display: inline-flex;
+        }
+        
+        .notification-badge::after {
+            content: attr(data-count);
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .notification-badge[data-count="0"]::after {
+            display: none;
+        }
+        
+        /* Estilos para la lista de citas del cliente */
+        .appointment-card {
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #333;
+        }
+        
+        .appointment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .appointment-title {
+            font-weight: bold;
+            color: #d4af37;
+        }
+        
+        .appointment-date {
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+        
+        .appointment-details {
+            margin-bottom: 10px;
+        }
+        
+        .appointment-detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .appointment-detail-label {
+            color: #999;
+        }
+        
+        .appointment-detail-value {
+            color: #f5f5f5;
+            font-weight: 500;
+        }
+        
+        .appointment-notes {
+            background-color: #333;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            color: #ccc;
+            font-style: italic;
+        }
+        
+        .appointment-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -846,7 +948,7 @@
 <div class="barber-pole"></div>
 
 <!-- Página principal -->
-<div id="home-page">
+<div id="home-page" class="page active">
     <div class="container">
         <div class="header">
             <h1>Barber Express</h1>
@@ -881,6 +983,9 @@
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
                     </div>
+                  cy="7" r="4"></circle>
+                        </svg>
+                    </div>
                     <h2 class="card-title">Soy Cliente</h2>
                     <p class="card-description">Encuentra a tu peluquero y reserva tu cita</p>
                 </div>
@@ -896,7 +1001,7 @@
 </div>
 
 <!-- Página de login de peluquero -->
-<div id="barber-login" class="page" style="display: none;">
+<div id="barber-login" class="page">
     <div class="container">
         <div class="form-container">
             <a href="#" class="back-link" id="barber-login-back">
@@ -928,7 +1033,7 @@
 </div>
 
 <!-- Página de registro de peluquero -->
-<div id="barber-register" class="page" style="display: none;">
+<div id="barber-register" class="page">
     <div class="container">
         <div class="form-container">
             <a href="#" class="back-link" id="barber-register-back">
@@ -972,7 +1077,7 @@
 </div>
 
 <!-- Página de verificación de correo -->
-<div id="email-verification" class="page" style="display: none;">
+<div id="email-verification" class="page">
     <div class="container">
         <div class="form-container">
             <div class="form-header">
@@ -1000,7 +1105,7 @@
 </div>
 
 <!-- Página de login de cliente -->
-<div id="client-login" class="page" style="display: none;">
+<div id="client-login" class="page">
     <div class="container">
         <div class="form-container">
             <a href="#" class="back-link" id="client-login-back">
@@ -1032,7 +1137,7 @@
 </div>
 
 <!-- Página de registro de cliente -->
-<div id="client-register" class="page" style="display: none;">
+<div id="client-register" class="page">
     <div class="container">
         <div class="form-container">
             <a href="#" class="back-link" id="client-register-back">
@@ -1073,14 +1178,14 @@
 </div>
 
 <!-- Dashboard de peluquero -->
-<div id="barber-dashboard" class="page" style="display: none;">
+<div id="barber-dashboard" class="page">
     <header class="dashboard-header">
         <div class="container">
             <div class="dashboard-nav">
                 <a href="#" class="dashboard-logo">Barber Express</a>
                 <div class="dashboard-menu">
                     <a href="#" id="barber-menu-schedule">Agenda</a>
-                    <a href="#" id="barber-menu-appointments">Citas</a>
+                    <a href="#" id="barber-menu-appointments" class="notification-badge" data-count="0">Citas</a>
                     <a href="#" id="barber-menu-settings">Configuración</a>
                 </div>
                 <div class="dashboard-user">
@@ -1102,19 +1207,19 @@
             <div class="stats-container">
                 <div class="stat-card">
                     <div class="stat-title">Citas Hoy</div>
-                    <div class="stat-value">0</div>
+                    <div class="stat-value" id="barber-stats-today">0</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">Citas Pendientes</div>
-                    <div class="stat-value">0</div>
+                    <div class="stat-value" id="barber-stats-pending">0</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">Citas Esta Semana</div>
-                    <div class="stat-value">0</div>
+                    <div class="stat-value" id="barber-stats-week">0</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">Horarios Disponibles</div>
-                    <div class="stat-value">0</div>
+                    <div class="stat-value" id="barber-stats-available">0</div>
                 </div>
             </div>
 
@@ -1383,14 +1488,14 @@
 </div>
 
 <!-- Dashboard de cliente -->
-<div id="client-dashboard" class="page" style="display: none;">
+<div id="client-dashboard" class="page">
     <header class="dashboard-header">
         <div class="container">
             <div class="dashboard-nav">
                 <a href="#" class="dashboard-logo">Barber Express</a>
                 <div class="dashboard-menu">
                     <a href="#" id="client-menu-search">Buscar Peluquero</a>
-                    <a href="#" id="client-menu-appointments">Mis Citas</a>
+                    <a href="#" id="client-menu-appointments" class="notification-badge" data-count="0">Mis Citas</a>
                 </div>
                 <div class="dashboard-user">
                     <div class="avatar" id="client-avatar"></div>
@@ -1408,15 +1513,15 @@
             <div class="stats-container">
                 <div class="stat-card">
                     <div class="stat-title">Próxima Cita</div>
-                    <div class="stat-value" style="font-size: 1.2rem;">No hay citas programadas</div>
+                    <div class="stat-value" style="font-size: 1.2rem;" id="client-next-appointment">No hay citas programadas</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">Citas Pendientes</div>
-                    <div class="stat-value">0</div>
+                    <div class="stat-value" id="client-pending-count">0</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">Peluqueros Favoritos</div>
-                    <div class="stat-value">0</div>
+                    <div class="stat-value" id="client-favorites-count">0</div>
                 </div>
             </div>
 
@@ -1428,7 +1533,7 @@
 
                 <div id="client-search" class="tab-content active">
                     <div class="search-container">
-                        <input type="text" class="search-input" placeholder="Buscar peluquero por nombre o ID...">
+                        <input type="text" class="search-input" id="barber-search-input" placeholder="Buscar peluquero por nombre o ID...">
                     </div>
 
                     <div class="barber-list" id="barber-search-results">
@@ -1452,43 +1557,8 @@
     </div>
 </div>
 
-<!-- Modal de reserva -->
-<div id="booking-modal" class="modal-overlay">
-    <div class="modal">
-        <div class="modal-header">
-            <h3 class="modal-title">Confirmar Reserva</h3>
-            <p class="modal-description" id="booking-description"></p>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label for="booking-notes">Notas adicionales (opcional)</label>
-                <textarea id="booking-notes" class="form-control" placeholder="Ej: Corte de cabello y barba" rows="4"></textarea>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline" id="cancel-booking">Cancelar</button>
-            <button class="btn" id="confirm-booking">Confirmar Reserva</button>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de mensaje -->
-<div id="message-modal" class="modal-overlay">
-    <div class="modal" style="max-width: 400px;">
-        <div class="modal-header">
-            <h3 class="modal-title" id="message-title">Mensaje</h3>
-        </div>
-        <div class="modal-body">
-            <p id="message-content" style="text-align: center; margin: 10px 0 20px;"></p>
-        </div>
-        <div class="modal-footer" style="justify-content: center;">
-            <button class="btn" id="message-ok" style="max-width: 150px;">Aceptar</button>
-        </div>
-    </div>
-</div>
-
 <!-- Página de disponibilidad del peluquero -->
-<div id="barber-availability" class="page" style="display: none;">
+<div id="barber-availability" class="page">
     <header class="dashboard-header">
         <div class="container">
             <div class="dashboard-nav">
@@ -1722,6 +1792,41 @@
     </div>
 </div>
 
+<!-- Modal de reserva -->
+<div id="booking-modal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Confirmar Reserva</h3>
+            <p class="modal-description" id="booking-description"></p>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="booking-notes">Notas adicionales (opcional)</label>
+                <textarea id="booking-notes" class="form-control" placeholder="Ej: Corte de cabello y barba" rows="4"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-booking">Cancelar</button>
+            <button class="btn" id="confirm-booking">Confirmar Reserva</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de mensaje -->
+<div id="message-modal" class="modal-overlay">
+    <div class="modal" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3 class="modal-title" id="message-title">Mensaje</h3>
+        </div>
+        <div class="modal-body">
+            <p id="message-content" style="text-align: center; margin: 10px 0 20px;"></p>
+        </div>
+        <div class="modal-footer" style="justify-content: center;">
+            <button class="btn" id="message-ok" style="max-width: 150px;">Aceptar</button>
+        </div>
+    </div>
+</div>
+
 <script>
 // Función para mostrar el modal de mensaje
 function showMessage(title, message, callback) {
@@ -1743,11 +1848,11 @@ function showMessage(title, message, callback) {
 function showPage(pageId) {
     // Ocultar todas las páginas
     document.querySelectorAll('.page').forEach(page => {
-        page.style.display = 'none';
+        page.classList.remove('active');
     });
     
     // Mostrar la página solicitada
-    document.getElementById(pageId).style.display = 'block';
+    document.getElementById(pageId).classList.add('active');
 }
 
 // Función para generar un ID único
@@ -1966,12 +2071,338 @@ function addBarberToFavorites(clientId, barberId) {
     }
 }
 
-// Inicializar datos
-initializeData();
+// Función para obtener un peluquero por ID
+function getBarberById(barberId) {
+    const barbers = getFromLocalStorage('barbers') || [];
+    return barbers.find(barber => barber.id === barberId);
+}
 
-// Event Listeners
+// Función para obtener un cliente por ID
+function getClientById(clientId) {
+    const clients = getFromLocalStorage('clients') || [];
+    return clients.find(client => client.id === clientId);
+}
+
+// Función para renderizar los resultados de búsqueda de peluqueros
+function renderBarberSearchResults(barbers) {
+    const resultsContainer = document.getElementById('barber-search-results');
+    resultsContainer.innerHTML = '';
+    
+    if (barbers.length === 0) {
+        resultsContainer.innerHTML = '<p class="text-center" style="color: #bbb; margin-top: 20px;">No se encontraron peluqueros. Intenta con otro término de búsqueda.</p>';
+        return;
+    }
+    
+    barbers.forEach(barber => {
+        const barberCard = document.createElement('div');
+        barberCard.className = 'barber-card';
+        
+        barberCard.innerHTML = `
+            <div class="barber-info">
+                <div class="barber-avatar">${barber.name.charAt(0)}</div>
+                <div class="barber-details">
+                    <h3 class="barber-name">${barber.name}</h3>
+                    <p class="barber-id">${barber.id}</p>
+                    <div class="barber-rating">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        <span>5.0</span>
+                    </div>
+                    <p class="barber-bio">${barber.bio || 'Sin descripción'}</p>
+                </div>
+            </div>
+            <div class="barber-footer">
+                <button class="btn" data-barber-id="${barber.id}">Ver disponibilidad</button>
+            </div>
+        `;
+        
+        resultsContainer.appendChild(barberCard);
+        
+        // Agregar evento al botón de ver disponibilidad
+        const viewButton = barberCard.querySelector('.btn');
+        viewButton.addEventListener('click', function() {
+            const barberId = this.getAttribute('data-barber-id');
+            viewBarberAvailability(barberId);
+        });
+    });
+}
+
+// Función para ver la disponibilidad de un peluquero
+function viewBarberAvailability(barberId) {
+    const barber = getBarberById(barberId);
+    if (!barber) {
+        showMessage('Error', 'Peluquero no encontrado.');
+        return;
+    }
+    
+    // Actualizar la información del peluquero en la página de disponibilidad
+    document.getElementById('selected-barber-avatar').textContent = barber.name.charAt(0);
+    document.getElementById('selected-barber-name').textContent = barber.name;
+    document.getElementById('selected-barber-id').textContent = `ID: ${barber.id}`;
+    document.getElementById('selected-barber-bio').textContent = barber.bio || 'Sin descripción';
+    document.getElementById('selected-barber-phone').textContent = barber.phone || 'No disponible';
+    document.getElementById('selected-barber-location').textContent = barber.location || 'No disponible';
+    
+    // Configurar el botón de favoritos
+    const saveButton = document.getElementById('save-favorite');
+    saveButton.setAttribute('data-barber-id', barber.id);
+    
+    // Configurar los slots de disponibilidad
+    const availableSlots = document.querySelectorAll('#barber-availability .schedule-slot.slot-available');
+    availableSlots.forEach(slot => {
+        slot.addEventListener('click', function() {
+            const day = this.getAttribute('data-day');
+            const time = this.getAttribute('data-time');
+            
+            // Mostrar modal de confirmación
+            document.getElementById('booking-description').textContent = `Reserva con ${barber.name} para el ${day} a las ${time}`;
+            
+            // Configurar el botón de confirmar reserva
+            const confirmButton = document.getElementById('confirm-booking');
+            confirmButton.setAttribute('data-barber-id', barber.id);
+            confirmButton.setAttribute('data-day', day);
+            confirmButton.setAttribute('data-time', time);
+            
+            // Mostrar el modal
+            document.getElementById('booking-modal').style.display = 'flex';
+        });
+    });
+    
+    // Mostrar la página de disponibilidad
+    showPage('barber-availability');
+    
+    // Actualizar el avatar del cliente en la página de disponibilidad
+    const currentClient = getFromLocalStorage('currentClient');
+    if (currentClient) {
+        document.getElementById('client-avatar-availability').textContent = currentClient.name.charAt(0);
+    }
+}
+
+// Función para renderizar las citas de un peluquero
+function renderBarberAppointments(barberId) {
+    const appointments = getBarberAppointments(barberId);
+    const appointmentsList = document.getElementById('appointments-list');
+    appointmentsList.innerHTML = '';
+    
+    if (appointments.length === 0) {
+        appointmentsList.innerHTML = '<tr><td colspan="7" class="text-center">No tienes citas programadas.</td></tr>';
+        return;
+    }
+    
+    // Ordenar citas por fecha y hora
+    appointments.sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateB - dateA;
+    });
+    
+    appointments.forEach(appointment => {
+        const client = getClientById(appointment.clientId);
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${client ? client.name : 'Cliente desconocido'}</td>
+            <td>${client ? client.phone : 'N/A'}</td>
+            <td>${appointment.day}</td>
+            <td>${appointment.time}</td>
+            <td>
+                <span class="status-badge status-${appointment.status}">
+                    ${appointment.status === 'pending' ? 'Pendiente' : 
+                      appointment.status === 'confirmed' ? 'Confirmada' : 'Cancelada'}
+                </span>
+            </td>
+            <td>${appointment.notes || 'Sin notas'}</td>
+            <td class="action-buttons">
+                ${appointment.status === 'pending' ? `
+                    <button class="btn btn-sm btn-success confirm-appointment" data-id="${appointment.id}">Confirmar</button>
+                    <button class="btn btn-sm btn-danger cancel-appointment" data-id="${appointment.id}">Cancelar</button>
+                ` : ''}
+            </td>
+        `;
+        
+        appointmentsList.appendChild(row);
+    });
+    
+    // Agregar eventos a los botones de acción
+    document.querySelectorAll('.confirm-appointment').forEach(button => {
+        button.addEventListener('click', function() {
+            const appointmentId = this.getAttribute('data-id');
+            updateAppointmentStatus(appointmentId, 'confirmed');
+            renderBarberAppointments(barberId);
+            updateBarberStats(barberId);
+            showMessage('Cita Confirmada', 'La cita ha sido confirmada exitosamente.');
+        });
+    });
+    
+    document.querySelectorAll('.cancel-appointment').forEach(button => {
+        button.addEventListener('click', function() {
+            const appointmentId = this.getAttribute('data-id');
+            updateAppointmentStatus(appointmentId, 'cancelled');
+            renderBarberAppointments(barberId);
+            updateBarberStats(barberId);
+            showMessage('Cita Cancelada', 'La cita ha sido cancelada exitosamente.');
+        });
+    });
+}
+
+// Función para renderizar las citas de un cliente
+function renderClientAppointments(clientId) {
+    const appointments = getClientAppointments(clientId);
+    const appointmentsList = document.getElementById('client-appointments-list');
+    appointmentsList.innerHTML = '';
+    
+    if (appointments.length === 0) {
+        appointmentsList.innerHTML = '<p class="text-center" style="color: #bbb; margin-top: 20px;">No tienes citas programadas.</p>';
+        return;
+    }
+    
+    // Ordenar citas por fecha y hora
+    appointments.sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateB - dateA;
+    });
+    
+    appointments.forEach(appointment => {
+        const barber = getBarberById(appointment.barberId);
+        
+        const appointmentCard = document.createElement('div');
+        appointmentCard.className = 'appointment-card';
+        
+        appointmentCard.innerHTML = `
+            <div class="appointment-header">
+                <div class="appointment-title">Cita con ${barber ? barber.name : 'Peluquero desconocido'}</div>
+                <div class="appointment-date">${appointment.day}</div>
+            </div>
+            <div class="appointment-details">
+                <div class="appointment-detail-row">
+                    <div class="appointment-detail-label">Hora:</div>
+                    <div class="appointment-detail-value">${appointment.time}</div>
+                </div>
+                <div class="appointment-detail-row">
+                    <div class="appointment-detail-label">Estado:</div>
+                    <div class="appointment-detail-value">
+                        <span class="status-badge status-${appointment.status}">
+                            ${appointment.status === 'pending' ? 'Pendiente' : 
+                              appointment.status === 'confirmed' ? 'Confirmada' : 'Cancelada'}
+                        </span>
+                    </div>
+                </div>
+                ${barber ? `
+                <div class="appointment-detail-row">
+                    <div class="appointment-detail-label">Teléfono:</div>
+                    <div class="appointment-detail-value">${barber.phone || 'No disponible'}</div>
+                </div>
+                <div class="appointment-detail-row">
+                    <div class="appointment-detail-label">Ubicación:</div>
+                    <div class="appointment-detail-value">${barber.location || 'No disponible'}</div>
+                </div>
+                ` : ''}
+            </div>
+            ${appointment.notes ? `
+            <div class="appointment-notes">
+                ${appointment.notes}
+            </div>
+            ` : ''}
+            ${appointment.status === 'pending' ? `
+            <div class="appointment-actions">
+                <button class="btn btn-sm btn-danger cancel-client-appointment" data-id="${appointment.id}">Cancelar Cita</button>
+            </div>
+            ` : ''}
+        `;
+        
+        appointmentsList.appendChild(appointmentCard);
+    });
+    
+    // Agregar eventos a los botones de acción
+    document.querySelectorAll('.cancel-client-appointment').forEach(button => {
+        button.addEventListener('click', function() {
+            const appointmentId = this.getAttribute('data-id');
+            updateAppointmentStatus(appointmentId, 'cancelled');
+            renderClientAppointments(clientId);
+            updateClientStats(clientId);
+            showMessage('Cita Cancelada', 'La cita ha sido cancelada exitosamente.');
+        });
+    });
+}
+
+// Función para actualizar las estadísticas del peluquero
+function updateBarberStats(barberId) {
+    const appointments = getBarberAppointments(barberId);
+    
+    // Citas de hoy
+    const today = new Date().toLocaleDateString('es-ES', { weekday: 'long' });
+    const todayAppointments = appointments.filter(a => 
+        a.day.toLowerCase() === today.toLowerCase() && 
+        (a.status === 'confirmed' || a.status === 'pending')
+    );
+    
+    // Citas pendientes
+    const pendingAppointments = appointments.filter(a => a.status === 'pending');
+    
+    // Citas esta semana
+    const weekdays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    const weekAppointments = appointments.filter(a => 
+        weekdays.includes(a.day) && 
+        (a.status === 'confirmed' || a.status === 'pending')
+    );
+    
+    // Horarios disponibles
+    const totalSlots = 13 * 7; // 13 horarios por día, 7 días a la semana
+    const bookedSlots = appointments.filter(a => 
+        a.status === 'confirmed' || a.status === 'pending'
+    ).length;
+    const availableSlots = totalSlots - bookedSlots;
+    
+    // Actualizar los elementos en el DOM
+    document.getElementById('barber-stats-today').textContent = todayAppointments.length;
+    document.getElementById('barber-stats-pending').textContent = pendingAppointments.length;
+    document.getElementById('barber-stats-week').textContent = weekAppointments.length;
+    document.getElementById('barber-stats-available').textContent = availableSlots;
+    
+    // Actualizar el contador de notificaciones
+    document.getElementById('barber-menu-appointments').setAttribute('data-count', pendingAppointments.length);
+}
+
+// Función para actualizar las estadísticas del cliente
+function updateClientStats(clientId) {
+    const appointments = getClientAppointments(clientId);
+    const client = getClientById(clientId);
+    
+    // Próxima cita
+    const pendingAppointments = appointments.filter(a => 
+        a.status === 'confirmed' || a.status === 'pending'
+    );
+    
+    let nextAppointmentText = 'No hay citas programadas';
+    if (pendingAppointments.length > 0) {
+        const nextAppointment = pendingAppointments[0];
+        const barber = getBarberById(nextAppointment.barberId);
+        nextAppointmentText = `${nextAppointment.day} a las ${nextAppointment.time} con ${barber ? barber.name : 'Peluquero'}`;
+    }
+    
+    // Citas pendientes
+    const pendingCount = appointments.filter(a => a.status === 'pending').length;
+    
+    // Peluqueros favoritos
+    const favoritesCount = client ? client.favorites.length : 0;
+    
+    // Actualizar los elementos en el DOM
+    document.getElementById('client-next-appointment').textContent = nextAppointmentText;
+    document.getElementById('client-pending-count').textContent = pendingCount;
+    document.getElementById('client-favorites-count').textContent = favoritesCount;
+    
+    // Actualizar el contador de notificaciones
+    document.getElementById('client-menu-appointments').setAttribute('data-count', pendingCount);
+}
+
+// Inicializar la aplicación
 document.addEventListener('DOMContentLoaded', function() {
-    // Botones de la página principal
+    // Inicializar datos
+    initializeData();
+    
+    // Eventos para la página principal
     document.getElementById('btn-barber-login').addEventListener('click', function() {
         showPage('barber-login');
     });
@@ -1980,15 +2411,10 @@ document.addEventListener('DOMContentLoaded', function() {
         showPage('client-login');
     });
     
-    // Navegación de peluquero
+    // Eventos para la página de login de peluquero
     document.getElementById('barber-login-back').addEventListener('click', function(e) {
         e.preventDefault();
         showPage('home-page');
-    });
-    
-    document.getElementById('barber-register-back').addEventListener('click', function(e) {
-        e.preventDefault();
-        showPage('barber-login');
     });
     
     document.getElementById('barber-register-link').addEventListener('click', function(e) {
@@ -1996,23 +2422,48 @@ document.addEventListener('DOMContentLoaded', function() {
         showPage('barber-register');
     });
     
-    // Navegación de cliente
-    document.getElementById('client-login-back').addEventListener('click', function(e) {
-        e.preventDefault();
-        showPage('home-page');
+    document.getElementById('barber-login-submit').addEventListener('click', function() {
+        const email = document.getElementById('barber-email').value;
+        const password = document.getElementById('barber-password').value;
+        
+        if (!email || !password) {
+            showMessage('Error', 'Por favor, completa todos los campos.');
+            return;
+        }
+        
+        const result = loginBarber(email, password);
+        
+        if (result.success) {
+            // Actualizar la información del peluquero en el dashboard
+            document.getElementById('barber-avatar').textContent = result.barber.name.charAt(0);
+            document.getElementById('barber-id-display').textContent = `ID: ${result.barber.id}`;
+            
+            // Cargar los datos del perfil en la configuración
+            document.getElementById('settings-name').value = result.barber.name;
+            document.getElementById('settings-email').value = result.barber.email;
+            document.getElementById('settings-phone').value = result.barber.phone;
+            document.getElementById('settings-location').value = result.barber.location || '';
+            document.getElementById('settings-bio').value = result.barber.bio || '';
+            
+            // Actualizar las estadísticas
+            updateBarberStats(result.barber.id);
+            
+            // Renderizar las citas
+            renderBarberAppointments(result.barber.id);
+            
+            // Mostrar el dashboard
+            showPage('barber-dashboard');
+        } else {
+            showMessage('Error', result.message);
+        }
     });
     
-    document.getElementById('client-register-back').addEventListener('click', function(e) {
+    // Eventos para la página de registro de peluquero
+    document.getElementById('barber-register-back').addEventListener('click', function(e) {
         e.preventDefault();
-        showPage('client-login');
+        showPage('barber-login');
     });
     
-    document.getElementById('client-register-link').addEventListener('click', function(e) {
-        e.preventDefault();
-        showPage('client-register');
-    });
-    
-    // Formulario de registro de peluquero
     document.getElementById('barber-register-submit').addEventListener('click', function() {
         const name = document.getElementById('barber-name').value;
         const email = document.getElementById('barber-reg-email').value;
@@ -2020,9 +2471,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const password = document.getElementById('barber-reg-password').value;
         const confirmPassword = document.getElementById('barber-confirm-password').value;
         
-        // Validaciones básicas
-        if (!name || !email || !phone || !password) {
-            showMessage('Error', 'Por favor, completa todos los campos requeridos.');
+        if (!name || !email || !phone || !password || !confirmPassword) {
+            showMessage('Error', 'Por favor, completa todos los campos.');
             return;
         }
         
@@ -2034,39 +2484,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const result = registerBarber(name, email, phone, password);
         
         if (result.success) {
-            showMessage('Registro Exitoso', 'Tu cuenta ha sido creada correctamente. Tu ID único es: ' + result.barber.id, function() {
-                showPage('barber-login');
-            });
-        } else {
-            showMessage('Error', result.message);
-        }
-    });
-    
-    // Formulario de inicio de sesión de peluquero
-    document.getElementById('barber-login-submit').addEventListener('click', function() {
-        const email = document.getElementById('barber-email').value;
-        const password = document.getElementById('barber-password').value;
-        
-        if (!email || !password) {
-            showMessage('Error', 'Por favor, ingresa tu correo y contraseña.');
-            return;
-        }
-        
-        const result = loginBarber(email, password);
-        
-        if (result.success) {
-            showMessage('Inicio de Sesión Exitoso', 'Bienvenido de nuevo, ' + result.barber.name + '.', function() {
-                // Actualizar la interfaz del dashboard
-                document.getElementById('barber-avatar').textContent = result.barber.name.charAt(0);
-                document.getElementById('barber-id-display').textContent = 'ID: ' + result.barber.id;
-                
-                // Cargar datos del perfil
-                document.getElementById('settings-name').value = result.barber.name;
-                document.getElementById('settings-email').value = result.barber.email;
-                document.getElementById('settings-phone').value = result.barber.phone;
-                document.getElementById('settings-location').value = result.barber.location || '';
-                document.getElementById('settings-bio').value = result.barber.bio || '';
-                
+            // Guardar la sesión actual
+            saveToLocalStorage('currentBarber', result.barber);
+            
+            // Actualizar la información del peluquero en el dashboard
+            document.getElementById('barber-avatar').textContent = result.barber.name.charAt(0);
+            document.getElementById('barber-id-display').textContent = `ID: ${result.barber.id}`;
+            
+            // Cargar los datos del perfil en la configuración
+            document.getElementById('settings-name').value = result.barber.name;
+            document.getElementById('settings-email').value = result.barber.email;
+            document.getElementById('settings-phone').value = result.barber.phone;
+            document.getElementById('settings-location').value = result.barber.location || '';
+            document.getElementById('settings-bio').value = result.barber.bio || '';
+            
+            // Actualizar las estadísticas
+            updateBarberStats(result.barber.id);
+            
+            // Mostrar mensaje de éxito y luego ir al dashboard
+            showMessage('Registro Exitoso', `Tu ID único es: ${result.barber.id}. Compártelo con tus clientes para que te encuentren fácilmente.`, function() {
                 showPage('barber-dashboard');
             });
         } else {
@@ -2074,7 +2510,54 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Formulario de registro de cliente
+    // Eventos para la página de login de cliente
+    document.getElementById('client-login-back').addEventListener('click', function(e) {
+        e.preventDefault();
+        showPage('home-page');
+    });
+    
+    document.getElementById('client-register-link').addEventListener('click', function(e) {
+        e.preventDefault();
+        showPage('client-register');
+    });
+    
+    document.getElementById('client-login-submit').addEventListener('click', function() {
+        const email = document.getElementById('client-email').value;
+        const password = document.getElementById('client-password').value;
+        
+        if (!email || !password) {
+            showMessage('Error', 'Por favor, completa todos los campos.');
+            return;
+        }
+        
+        const result = loginClient(email, password);
+        
+        if (result.success) {
+            // Actualizar la información del cliente en el dashboard
+            document.getElementById('client-avatar').textContent = result.client.name.charAt(0);
+            
+            // Actualizar las estadísticas
+            updateClientStats(result.client.id);
+            
+            // Renderizar las citas
+            renderClientAppointments(result.client.id);
+            
+            // Mostrar el dashboard
+            showPage('client-dashboard');
+            
+            // Cargar todos los peluqueros en la búsqueda
+            renderBarberSearchResults(searchBarbers(''));
+        } else {
+            showMessage('Error', result.message);
+        }
+    });
+    
+    // Eventos para la página de registro de cliente
+    document.getElementById('client-register-back').addEventListener('click', function(e) {
+        e.preventDefault();
+        showPage('client-login');
+    });
+    
     document.getElementById('client-register-submit').addEventListener('click', function() {
         const name = document.getElementById('client-name').value;
         const email = document.getElementById('client-reg-email').value;
@@ -2082,9 +2565,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const password = document.getElementById('client-reg-password').value;
         const confirmPassword = document.getElementById('client-confirm-password').value;
         
-        // Validaciones básicas
-        if (!name || !email || !phone || !password) {
-            showMessage('Error', 'Por favor, completa todos los campos requeridos.');
+        if (!name || !email || !phone || !password || !confirmPassword) {
+            showMessage('Error', 'Por favor, completa todos los campos.');
             return;
         }
         
@@ -2096,74 +2578,43 @@ document.addEventListener('DOMContentLoaded', function() {
         const result = registerClient(name, email, phone, password);
         
         if (result.success) {
-            showMessage('Registro Exitoso', 'Tu cuenta ha sido creada correctamente.', function() {
-                showPage('client-login');
-            });
-        } else {
-            showMessage('Error', result.message);
-        }
-    });
-    
-    // Formulario de inicio de sesión de cliente
-    document.getElementById('client-login-submit').addEventListener('click', function() {
-        const email = document.getElementById('client-email').value;
-        const password = document.getElementById('client-password').value;
-        
-        if (!email || !password) {
-            showMessage('Error', 'Por favor, ingresa tu correo y contraseña.');
-            return;
-        }
-        
-        const result = loginClient(email, password);
-        
-        if (result.success) {
-            showMessage('Inicio de Sesión Exitoso', 'Bienvenido de nuevo, ' + result.client.name + '.', function() {
-                // Actualizar la interfaz del dashboard
-                document.getElementById('client-avatar').textContent = result.client.name.charAt(0);
-                
+            // Guardar la sesión actual
+            saveToLocalStorage('currentClient', result.client);
+            
+            // Actualizar la información del cliente en el dashboard
+            document.getElementById('client-avatar').textContent = result.client.name.charAt(0);
+            
+            // Actualizar las estadísticas
+            updateClientStats(result.client.id);
+            
+            // Mostrar mensaje de éxito y luego ir al dashboard
+            showMessage('Registro Exitoso', 'Tu cuenta ha sido creada exitosamente. Ahora puedes buscar peluqueros y reservar citas.', function() {
                 showPage('client-dashboard');
+                
+                // Cargar todos los peluqueros en la búsqueda
+                renderBarberSearchResults(searchBarbers(''));
             });
         } else {
             showMessage('Error', result.message);
         }
     });
     
-    // Guardar cambios del perfil de peluquero
-    document.getElementById('save-settings').addEventListener('click', function() {
-        const currentBarber = getFromLocalStorage('currentBarber');
-        
-        if (!currentBarber) {
-            showMessage('Error', 'No hay una sesión activa.');
-            return;
-        }
-        
-        const name = document.getElementById('settings-name').value;
-        const email = document.getElementById('settings-email').value;
-        const phone = document.getElementById('settings-phone').value;
-        const location = document.getElementById('settings-location').value;
-        const bio = document.getElementById('settings-bio').value;
-        
-        if (!name || !email || !phone) {
-            showMessage('Error', 'Por favor, completa los campos requeridos.');
-            return;
-        }
-        
-        const result = updateBarberProfile(currentBarber.id, {
-            name,
-            email,
-            phone,
-            location,
-            bio
-        });
-        
-        if (result.success) {
-            showMessage('Perfil Actualizado', 'Tus datos han sido actualizados correctamente.');
-        } else {
-            showMessage('Error', result.message);
-        }
+    // Eventos para el dashboard de peluquero
+    document.getElementById('barber-menu-schedule').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('tab-schedule').click();
     });
     
-    // Navegación en pestañas del dashboard de peluquero
+    document.getElementById('barber-menu-appointments').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('tab-appointments').click();
+    });
+    
+    document.getElementById('barber-menu-settings').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('tab-settings').click();
+    });
+    
     document.getElementById('tab-schedule').addEventListener('click', function() {
         document.querySelectorAll('.tab-item').forEach(tab => tab.classList.remove('active'));
         this.classList.add('active');
@@ -2178,6 +2629,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
         document.getElementById('barber-appointments').classList.add('active');
+        
+        // Actualizar la lista de citas
+        const currentBarber = getFromLocalStorage('currentBarber');
+        if (currentBarber) {
+            renderBarberAppointments(currentBarber.id);
+        }
     });
     
     document.getElementById('tab-settings').addEventListener('click', function() {
@@ -2188,7 +2645,53 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('barber-settings').classList.add('active');
     });
     
-    // Navegación en pestañas del dashboard de cliente
+    document.getElementById('save-settings').addEventListener('click', function() {
+        const currentBarber = getFromLocalStorage('currentBarber');
+        if (!currentBarber) {
+            showMessage('Error', 'No se pudo encontrar la información del peluquero.');
+            return;
+        }
+        
+        const name = document.getElementById('settings-name').value;
+        const email = document.getElementById('settings-email').value;
+        const phone = document.getElementById('settings-phone').value;
+        const location = document.getElementById('settings-location').value;
+        const bio = document.getElementById('settings-bio').value;
+        
+        if (!name || !email || !phone) {
+            showMessage('Error', 'Por favor, completa los campos obligatorios.');
+            return;
+        }
+        
+        const result = updateBarberProfile(currentBarber.id, {
+            name,
+            email,
+            phone,
+            location,
+            bio
+        });
+        
+        if (result.success) {
+            // Actualizar la información del peluquero en el dashboard
+            document.getElementById('barber-avatar').textContent = result.barber.name.charAt(0);
+            
+            showMessage('Éxito', 'Tu perfil ha sido actualizado exitosamente.');
+        } else {
+            showMessage('Error', result.message);
+        }
+    });
+    
+    // Eventos para el dashboard de cliente
+    document.getElementById('client-menu-search').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('tab-search').click();
+    });
+    
+    document.getElementById('client-menu-appointments').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('tab-client-appointments').click();
+    });
+    
     document.getElementById('tab-search').addEventListener('click', function() {
         document.querySelectorAll('.tab-item').forEach(tab => tab.classList.remove('active'));
         this.classList.add('active');
@@ -2203,74 +2706,127 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
         document.getElementById('client-appointments').classList.add('active');
+        
+        // Actualizar la lista de citas
+        const currentClient = getFromLocalStorage('currentClient');
+        if (currentClient) {
+            renderClientAppointments(currentClient.id);
+        }
     });
     
-    // Botón para volver al dashboard desde la página de disponibilidad
+    document.getElementById('barber-search-input').addEventListener('input', function() {
+        const query = this.value.trim();
+        const results = searchBarbers(query);
+        renderBarberSearchResults(results);
+    });
+    
+    // Eventos para la página de disponibilidad del peluquero
     document.getElementById('back-to-dashboard').addEventListener('click', function(e) {
         e.preventDefault();
         showPage('client-dashboard');
     });
     
-    // Botón para guardar peluquero como favorito
     document.getElementById('save-favorite').addEventListener('click', function() {
         const currentClient = getFromLocalStorage('currentClient');
-        const selectedBarberId = this.getAttribute('data-barber-id');
-        
         if (!currentClient) {
-            showMessage('Error', 'No hay una sesión activa.');
+            showMessage('Error', 'Debes iniciar sesión para guardar favoritos.');
             return;
         }
         
-        if (!selectedBarberId) {
-            showMessage('Error', 'No se ha seleccionado un peluquero.');
-            return;
-        }
-        
-        const result = addBarberToFavorites(currentClient.id, selectedBarberId);
+        const barberId = this.getAttribute('data-barber-id');
+        const result = addBarberToFavorites(currentClient.id, barberId);
         
         if (result.success) {
-            showMessage('Favorito Guardado', 'El peluquero ha sido añadido a tus favoritos.');
+            showMessage('Éxito', 'Peluquero añadido a favoritos.');
+            updateClientStats(currentClient.id);
         } else {
             showMessage('Error', result.message);
         }
     });
     
-    // Botón para confirmar reserva
-    document.getElementById('confirm-booking').addEventListener('click', function() {
-        const currentClient = getFromLocalStorage('currentClient');
-        const selectedBarberId = document.getElementById('save-favorite').getAttribute('data-barber-id');
-        const bookingDay = this.getAttribute('data-day');
-        const bookingTime = this.getAttribute('data-time');
-        const bookingNotes = document.getElementById('booking-notes').value;
-        
-        if (!currentClient) {
-            showMessage('Error', 'No hay una sesión activa.');
-            return;
-        }
-        
-        if (!selectedBarberId || !bookingDay || !bookingTime) {
-            showMessage('Error', 'Información de reserva incompleta.');
-            return;
-        }
-        
-        const result = createAppointment(selectedBarberId, currentClient.id, bookingDay, bookingTime, bookingNotes);
-        
-        if (result.success) {
-            document.getElementById('booking-modal').style.display = 'none';
-            showMessage('Reserva Confirmada', 'Tu cita ha sido reservada correctamente.', function() {
-                showPage('client-dashboard');
-            });
-        } else {
-            showMessage('Error', result.message);
-        }
-    });
-    
-    // Botón para cancelar reserva
+    // Eventos para el modal de reserva
     document.getElementById('cancel-booking').addEventListener('click', function() {
         document.getElementById('booking-modal').style.display = 'none';
     });
+    
+    document.getElementById('confirm-booking').addEventListener('click', function() {
+        const currentClient = getFromLocalStorage('currentClient');
+        if (!currentClient) {
+            showMessage('Error', 'Debes iniciar sesión para reservar una cita.');
+            return;
+        }
+        
+        const barberId = this.getAttribute('data-barber-id');
+        const day = this.getAttribute('data-day');
+        const time = this.getAttribute('data-time');
+        const notes = document.getElementById('booking-notes').value;
+        
+        const result = createAppointment(barberId, currentClient.id, day, time, notes);
+        
+        if (result.success) {
+            // Ocultar el modal
+            document.getElementById('booking-modal').style.display = 'none';
+            
+            // Actualizar la lista de citas del cliente
+            renderClientAppointments(currentClient.id);
+            updateClientStats(currentClient.id);
+            
+            // Mostrar mensaje de éxito
+            showMessage('Reserva Exitosa', 'Tu cita ha sido reservada exitosamente. El peluquero debe confirmarla.');
+            
+            // Marcar el slot como reservado
+            const slot = document.querySelector(`#barber-availability .schedule-slot[data-day="${day}"][data-time="${time}"]`);
+            if (slot) {
+                slot.classList.remove('slot-available');
+                slot.classList.add('slot-pending');
+                slot.textContent = 'Pendiente';
+                slot.removeEventListener('click', null);
+            }
+        } else {
+            showMessage('Error', 'No se pudo crear la reserva. Inténtalo de nuevo.');
+        }
+    });
+    
+    // Verificar si hay una sesión activa
+    const currentBarber = getFromLocalStorage('currentBarber');
+    if (currentBarber) {
+        // Actualizar la información del peluquero en el dashboard
+        document.getElementById('barber-avatar').textContent = currentBarber.name.charAt(0);
+        document.getElementById('barber-id-display').textContent = `ID: ${currentBarber.id}`;
+        
+        // Cargar los datos del perfil en la configuración
+        document.getElementById('settings-name').value = currentBarber.name;
+        document.getElementById('settings-email').value = currentBarber.email;
+        document.getElementById('settings-phone').value = currentBarber.phone;
+        document.getElementById('settings-location').value = currentBarber.location || '';
+        document.getElementById('settings-bio').value = currentBarber.bio || '';
+        
+        // Actualizar las estadísticas
+        updateBarberStats(currentBarber.id);
+        
+        // Renderizar las citas
+        renderBarberAppointments(currentBarber.id);
+        
+        // Mostrar el dashboard
+        showPage('barber-dashboard');
+    }
+    
+    const currentClient = getFromLocalStorage('currentClient');
+    if (currentClient && !currentBarber) {
+        // Actualizar la información del cliente en el dashboard
+        document.getElementById('client-avatar').textContent = currentClient.name.charAt(0);
+        
+        // Actualizar las estadísticas
+        updateClientStats(currentClient.id);
+        
+        // Renderizar las citas
+        renderClientAppointments(currentClient.id);
+        
+        // Mostrar el dashboard
+        showPage('client-dashboard');
+        
+        // Cargar todos los peluqueros en la búsqueda
+        renderBarberSearchResults(searchBarbers(''));
+    }
 });
 </script>
-</body>
-</html>
-
